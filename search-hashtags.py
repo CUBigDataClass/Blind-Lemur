@@ -1,10 +1,13 @@
 from __future__ import absolute_import, print_function
-
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from tweepy import API
 import json
+
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setMaster("local").setAppName("search-hashtags")
+sc = SparkContext(conf = conf)
 
 consumer_key=""
 consumer_secret=""
