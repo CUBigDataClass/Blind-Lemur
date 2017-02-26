@@ -1,18 +1,30 @@
+#!/usr/bin/env python
 from __future__ import absolute_import, print_function
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
-from tweepy import Stream
 from tweepy import API
 import json
+import yaml
+
+
+
+import os
+import sys
+
+with open("ApiAccessConfig.yaml", 'r') as apiconfig:
+    config = yaml.load(apiconfig)
+    consumer_key = config["consumer_key"]
+    consumer_secret =  config["consumer_secret"]
+    access_token_secret =  config["access_token_secret"]
+    access_token = config["access_token"]
+
+#Importing SPark
+#os.environ['SPARK_HOME'] = "SparkPAth"
+#sys.path.append("Py4j PAth")
 
 from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("local").setAppName("search-hashtags")
 sc = SparkContext(conf = conf)
-
-consumer_key=""
-consumer_secret=""
-access_token=""
-access_token_secret=""
 
 
 class StdOutListener(StreamListener):
