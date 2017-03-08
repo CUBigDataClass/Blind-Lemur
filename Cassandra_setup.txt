@@ -2,3 +2,7 @@
 Download the tarball with version 3.8 [http://downloads.datastax.com/datastax-ddc/datastax-ddc-3.8.0-bin.tar.gz]
 and then follow the instructions in the following link to extract and start cassandra.
  -->   http://docs.datastax.com/en/archived/cassandra/3.x/cassandra/install/installTarball.html#installTarball__single-node-start
+
+Cassandra architecture -
+
+http://docs.datastax.com/en/archived/cassandra/3.x/cassandra/architecture/archIntro.html#archIntro__key-tasks
