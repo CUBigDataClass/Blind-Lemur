@@ -1,0 +1,6 @@
+
+# Follow Kafka and zookeeper installation steps here: https://kafka.apache.org/quickstart
+
+bootstrap_servers: localhost:9092
+kafka_topic: kafkatopic
+
