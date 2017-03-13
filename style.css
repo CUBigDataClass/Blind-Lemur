@@ -1,0 +1,17 @@
+
+.wrapper{
+  width: 1000px;
+  background: lightgreen;
+  margin: 0 auto 0 auto;
+  min-height: 600px;
+}
+.heading{
+  height: 150px;
+  background: green;
+  padding: 30px;
+  text-align: center;
+}
+.account{
+  text-align: center;
+  margin: 0 auto;
+}
