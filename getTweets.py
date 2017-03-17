@@ -5,29 +5,36 @@ import requests
 import config
 import json
 import time
-class RequestWithMethod(Request):
-    def __init__(self, url, method, headers={}):
-        self._method = method
-        Request.__init__(self, url, headers)
-
-    def get_method(self):
-        if self._method:
-            return self._method
-        else:
-            return Request.get_method(self)
-
+def parseJSON(data):
+    for tweet in data["results"]:
+        month= tweet["created_at"].split()[1]
+        tweet_id= tweet["id"]
+        tweet_text=tweet["text"]
+        retweet_count = tweet["retweet_count"]
+        results=[month,tweet_id,tweet_text,retweet_count]
+        print(results)
 if __name__ == "__main__":
     fromDate='201601010000'
     toDate='201701010000'
     query='lang=en'
-    PAUSE = 1 # seconds between page requests
+    PAUSE = 20 # seconds between page requests
+    maxResults="500"
     queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate
+    # +'&maxResults='+maxResults
     next_token=''
-    while next_token is not None:
+    numOftweets=1000
+    maxresults=int(maxResults)
+    count=numOftweets/maxresults
+    i=0
+
+    while (next_token is not None) and i<count:
         req = requests.get(queryString, auth=(config.username, config.password))
         results=req.text
         json_out = json.loads(results)
+        parseJSON(json_out)
         next_token = json_out['next']
-        queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate +'&next='+next_token
+        queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate+'&next='+next_token
+        # +'&maxResults='maxResults
         time.sleep(PAUSE)
-        print(req.text)
+        # print(req.text)
+        i+=1
