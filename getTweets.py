@@ -16,7 +16,7 @@ def createCassandraConnection():
     cluster = Cluster()
     session = cluster.connect()
     session.execute('USE '+config.cassandra_keyspace+';')
-    session.execute('DROP TABLE IF EXISTS TwitterStorage.tweetTable')
+    session.execute('DROP TABLE IF EXISTS '+config.cassandra_table+'')
     session.execute(config.cassandra_createTableQuery)
     return session
 
@@ -34,7 +34,7 @@ def insertIntoCassandra(data, session):
         retweet_count = tweet["retweet_count"]
         results=[tweet_date,tweet_id,tweet_text,retweet_count]
         batch = BatchStatement()
-        insert_data = session.prepare("INSERT INTO TwitterStorage.tweetTable (tweetID, tweetDate, retweetCount, tweet) VALUES (?, ?, ?, ?)")
+        insert_data = session.prepare('INSERT INTO '+config.cassandra_table+' (tweetID, tweetDate, retweetCount, tweet) VALUES (?, ?, ?, ?)')
         batch.add(insert_data, (tweet_id, tweet_date, retweet_count, tweet_text))
         session.execute(batch)
 

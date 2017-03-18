@@ -10,4 +10,4 @@ kafka_topic = "kafkatopic"
 
 cassandra_keyspace= 'TwitterStorage'
 cassandra_createTableQuery= 'CREATE TABLE tweetTable (tweetID double PRIMARY KEY, tweetDate date, retweetCount int, tweet text);'
-
+cassandra_table = cassandra_keyspace+'.'+'tweetTable'
