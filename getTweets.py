@@ -5,13 +5,17 @@ import requests
 import config
 import json
 import time
+import re
 def parseJSON(data):
     for tweet in data["results"]:
         month= tweet["created_at"].split()[1]
         tweet_id= tweet["id"]
         tweet_text=tweet["text"]
+        text = re.sub(r"(?:\@|https?\://)\S+", "", tweet_text)
         retweet_count = tweet["retweet_count"]
-        results=[month,tweet_id,tweet_text,retweet_count]
+        place= tweet["place"]
+        hashtags=tweet["entities"]["hashtags"]
+        results=[month,tweet_id,text,retweet_count,place,hashtags]
         print(results)
 if __name__ == "__main__":
     fromDate='201601010000'
