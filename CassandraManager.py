@@ -4,7 +4,7 @@ from email.utils import parsedate_tz
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement, SimpleStatement
 import config
-
+import re
 
 def createCassandraConnection():
     cluster = Cluster()
@@ -30,7 +30,7 @@ def insertIntoCassandra(data, session):
         place = tweet["place"]
         hashtags = tweet["entities"]["hashtags"]
         for hashtag in hashtags:
-            hashtagList.append(hashtag)
+            hashtagList.append(hashtag['text'])
         retweet_count = tweet["retweet_count"]
 
         batch = BatchStatement()
