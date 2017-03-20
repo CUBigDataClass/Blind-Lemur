@@ -22,11 +22,18 @@ def to_datetime(datestring):
 
 def insertIntoCassandra(data, session):
     for tweet in data["results"]:
+        hashtagList=[]
         tweet_date= to_datetime(tweet["created_at"])
         tweet_id= tweet["id"]
         tweet_text=tweet["text"]
+        tweet_text = re.sub(r"(?:\@|https?\://)\S+", "", tweet_text)
+        place = tweet["place"]
+        hashtags = tweet["entities"]["hashtags"]
+        for hashtag in hashtags:
+            hashtagList.append(hashtag)
         retweet_count = tweet["retweet_count"]
+
         batch = BatchStatement()
-        insert_data = session.prepare('INSERT INTO '+config.cassandra_table+' (tweetID, tweetDate, retweetCount, tweet) VALUES (?, ?, ?, ?)')
-        batch.add(insert_data, (tweet_id, tweet_date, retweet_count, tweet_text))
+        insert_data = session.prepare('INSERT INTO '+config.cassandra_table+' (tweetID, tweetDate, retweetCount, tweet, hashtags) VALUES (?, ?, ?, ?, ?)')
+        batch.add(insert_data, (tweet_id, tweet_date, retweet_count, tweet_text, hashtagList))
         session.execute(batch)
