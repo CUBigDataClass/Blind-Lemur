@@ -1,10 +1,17 @@
-import  os
-#check if pyspark env vars are set and then reset to required or delete.
-del os.environ['PYSPARK_SUBMIT_ARGS']
 from pyspark import SparkConf, SparkContext
-import collections
+from textblob import TextBlob
 
 conf = SparkConf().setMaster("local").setAppName("LDA-topic")
 sc = SparkContext(conf = conf)
 
-lines = sc.textFile("tweetsDB.txt")
+def  isEnglish(tweet_text):
+    if(len(tweet_text)>2):
+        b=TextBlob(u""+tweet_text)
+        b.detect_language() =='en'
+
+#This should be replace by querying cassandra
+tweets = sc.textFile("tweetsDB.txt")
+
+#cleaning dataset
+# 1) filter non-English tweets
+rdd = tweets.filter(isEnglish).collect()
