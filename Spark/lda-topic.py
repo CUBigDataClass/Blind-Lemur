@@ -7,13 +7,17 @@ from string import digits
 from nltk.stem.porter import PorterStemmer
 from pyspark.mllib.clustering import LDA, LDAModel
 from pyspark.mllib.linalg import Vectors
+from gensim import corpora, models
 
 conf = SparkConf().setMaster("local").setAppName("LDA-topic")
 sc = SparkContext(conf = conf)
 tokenizer = RegexpTokenizer(r'\w+')
-# create English stop words set
-en_stop = set(get_stop_words('en'))
 
+en_stop = set(get_stop_words('en')) # create English stop words set
+num_topics = 100            # Number of topics we are looking for
+num_words_per_topic = 10    # Number of words to display for each topic
+max_iterations = 35         # Max number of times to iterate before finishing
+token_frequency = defaultdict(int) # Dictionary - word: frequency
 #isEnglish()) takes tweet_text(string) and then returns True if the string is English.
 def  isEnglish(tweet_text):
     return classify(tweet_text)[0]=='en'
@@ -45,12 +49,31 @@ tweets_alpha=stopped_tokens.map(lambda tweet:(filter(str.isalpha,tweet)))
 tweets_tokens=tweets_alpha.map(lambda tweet:filter(lambda x: len(x) >2 , tweet))
 # Remove empty list of tokens
 cleanText=tweets_tokens.filter(lambda tokens: tokens)
-# print(cleanText.collect())
+
 #6) Steaming
 # Create p_stemmer of class PorterStemmer
 p_stemmer = PorterStemmer()
 # replace map by flatmap if you want to flatten the list
 stemmed_tokens = cleanText.map(lambda token: map(p_stemmer.stem,token))
 # Remove unicode & convert each token to string
-str_tokens= stemmed_tokens.map(lambda tokens : map(str,tokens))
-# print(stemmed_tokens.map(lambda tokens : map(str,tokens)).collect())
+str_tokens= stemmed_tokens.flatMap(lambda tokens : map(str,tokens))
+
+frq_words = str_tokens.map(lambda word: (word,1)).reduceByKey(lambda a, b: a + b)
+#Remove words that only occur once
+rep_words= frq_words.filter(lambda pair: pair[1]>1)
+
+# dictionary = corpora.Dictionary(texts)
+# Open an output file
+# with open("output.txt", 'w') as f:
+#     lda_model = LDA.train(documents, k=num_topics, maxIterations=max_iterations)
+#
+#     topic_indices = lda_model.describeTopics(maxTermsPerTopic=num_words_per_topic)
+#
+#     # Print topics, showing the top-weighted 10 terms for each topic
+#     for i in range(len(topic_indices)):
+#         f.write("Topic #{0}\n".format(i + 1))
+#         for j in range(len(topic_indices[i][0])):
+#             f.write("{0}\t{1}\n".format(inv_voc[topic_indices[i][0][j]].encode('utf-8'), topic_indices[i][1][j]))
+#
+#
+#     f.write("{0} topics distributed over {1} documents and {2} unique words\n".format(topic_val, documents.count(), len(vocabulary)))
