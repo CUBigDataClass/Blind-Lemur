@@ -14,7 +14,7 @@ if __name__ == "__main__":
     fromDate='201601010000'
     toDate='201701010000'
     query='lang=en'
-    PAUSE = 20 # seconds between page requests
+    PAUSE = 10 # seconds between page requests
     maxResults="500"
     queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate
     # +'&maxResults='+maxResults
