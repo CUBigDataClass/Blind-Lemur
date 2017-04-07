@@ -19,7 +19,7 @@ if __name__ == "__main__":
     queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate
     # +'&maxResults='+maxResults
     next_token=''
-    numOftweets=1000
+    numOftweets=100000
     maxresults=int(maxResults)
     count=numOftweets/maxresults
     i=0
