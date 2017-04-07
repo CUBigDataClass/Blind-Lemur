@@ -24,14 +24,25 @@ if __name__ == "__main__":
     count=numOftweets/maxresults
     i=0
     session = CassandraManager.createCassandraConnection();
-    while (next_token is not None) and i<count:
+    while (next_token is not None) :
+        prior_request = time.time()
         req = requests.get(queryString, auth=(config.username, config.password))
+        post_request = time.time()
+        print("Time taken for get request call: {}".format(post_request - prior_request))
+        # break
         results=req.text
         json_out = json.loads(results)
+        if "results" not in json_out:
+            time.sleep(2)
+            continue
+        print(json_out)
+        before_insertion = time.time()
         CassandraManager.insertIntoCassandra(json_out, session)
+        after_insertion = time.time()
+        print("Time taken to insert data : {}".format(after_insertion - before_insertion))
         next_token = json_out['next']
         queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate+'&next='+next_token
         # +'&maxResults='maxResults
-        time.sleep(PAUSE)
+        # time.sleep(PAUSE)
         # print(req.text)
         i+=1
