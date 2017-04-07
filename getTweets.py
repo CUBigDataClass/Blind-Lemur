@@ -16,7 +16,7 @@ if __name__ == "__main__":
     query='lang=en'
     PAUSE = 10 # seconds between page requests
     maxResults="500"
-    queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate
+    queryString = config.url + '?query=' + query+ '&maxResults='+ maxResults +'&fromDate='+fromDate+'&toDate='+toDate
     # +'&maxResults='+maxResults
     next_token=''
     numOftweets=100000
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         after_insertion = time.time()
         print("Time taken to insert data : {}".format(after_insertion - before_insertion))
         next_token = json_out['next']
-        queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate+'&next='+next_token
+        queryString = config.url + '?query=' + query+ '&maxResults='+ maxResults + '&fromDate='+fromDate+'&toDate='+toDate+'&next='+next_token
         # +'&maxResults='maxResults
         # time.sleep(PAUSE)
         # print(req.text)
