@@ -6,5 +6,5 @@ password = ''
 cassandra_keyspace = 'TwitterStorage'
 cassandra_table = 'tweettable'
 
-cassandra_createTableQuery = 'CREATE TABLE twitterstorage.tweettable (tweetid double PRIMARY KEY,hashtags list<text>,retweetcount int,tweet text, tweetdate date)'
+cassandra_createTableQuery = 'CREATE TABLE IF NOT EXISTS twitterstorage.tweettable (tweetid double PRIMARY KEY,hashtags list<text>,retweetcount int,tweet text, tweetdate date)'
 
