@@ -11,10 +11,10 @@ import CassandraManager
 
 
 if __name__ == "__main__":
-    fromDate='201601010000'
-    toDate='201701010000'
+    fromDate = '201612010000'  # <yyyymmddhhmm
+    toDate = '201612310000'  # <yyyymmddhhmm
     query='lang=en'
-    PAUSE = 20 # seconds between page requests
+    PAUSE = 10 # seconds between page requests
     maxResults="500"
     queryString = config.url + '?query=' + query+'&fromDate='+fromDate+'&toDate='+toDate
     # +'&maxResults='+maxResults
