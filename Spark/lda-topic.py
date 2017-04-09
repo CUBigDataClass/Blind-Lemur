@@ -8,6 +8,7 @@ from nltk.stem.porter import PorterStemmer
 from pyspark.mllib.clustering import LDA, LDAModel
 from pyspark.mllib.linalg import Vectors
 from gensim import corpora, models
+from collections import defaultdict
 
 conf = SparkConf().setMaster("local").setAppName("LDA-topic")
 sc = SparkContext(conf = conf)
@@ -31,7 +32,7 @@ def tokenize(text):
 def isStopWord(token):
     return token not in en_stop
 #This should be replaced by querying cassandra
-tweets = sc.textFile("tweetsDB.txt")
+tweets = sc.textFile("DB/tweetsDB.txt","DB/BarackObama_tweets.txt")
 
 #cleaning dataset
 # 1) filter non-English tweets
@@ -56,24 +57,36 @@ p_stemmer = PorterStemmer()
 # replace map by flatmap if you want to flatten the list
 stemmed_tokens = cleanText.map(lambda token: map(p_stemmer.stem,token))
 # Remove unicode & convert each token to string
-str_tokens= stemmed_tokens.flatMap(lambda tokens : map(str,tokens))
+str_tokens= stemmed_tokens.map(lambda tokens : map(str,tokens))
+flat_tokens= stemmed_tokens.flatMap(lambda tokens : map(str,tokens))
+frq_words = flat_tokens.map(lambda word: (word,1)).reduceByKey(lambda a, b: a + b).map(lambda tuple: (tuple[1], tuple[0])).sortByKey(False)
 
-frq_words = str_tokens.map(lambda word: (word,1)).reduceByKey(lambda a, b: a + b)
-#Remove words that only occur once
-rep_words= frq_words.filter(lambda pair: pair[1]>1)
+filteredList= frq_words.filter(lambda pair: pair[0]>1).map(lambda x: x[1]).zipWithIndex().collectAsMap()
 
-# dictionary = corpora.Dictionary(texts)
-# Open an output file
-# with open("output.txt", 'w') as f:
-#     lda_model = LDA.train(documents, k=num_topics, maxIterations=max_iterations)
-#
-#     topic_indices = lda_model.describeTopics(maxTermsPerTopic=num_words_per_topic)
-#
-#     # Print topics, showing the top-weighted 10 terms for each topic
-#     for i in range(len(topic_indices)):
-#         f.write("Topic #{0}\n".format(i + 1))
-#         for j in range(len(topic_indices[i][0])):
-#             f.write("{0}\t{1}\n".format(inv_voc[topic_indices[i][0][j]].encode('utf-8'), topic_indices[i][1][j]))
-#
-#
-#     f.write("{0} topics distributed over {1} documents and {2} unique words\n".format(topic_val, documents.count(), len(vocabulary)))
+# Convert the given document into a vector of word counts
+def document_vector(document):
+    id = document[1]
+    counts = defaultdict(int)
+    for token in document[0]:
+        if token in filteredList:
+            token_id = filteredList[token]
+            counts[token_id] += 1
+    counts = sorted(counts.items())
+    keys = [x[0] for x in counts]
+    values = [x[1] for x in counts]
+    return (id, Vectors.sparse(len(filteredList), keys, values))
+# Now the dataset is clean ready to do LDA-topic modeling
+
+corpus = str_tokens.zipWithIndex().map(document_vector).map(list)
+
+# Cluster the documents into three topics using LDA
+lda_model = LDA.train(corpus, k=num_topics, maxIterations=max_iterations)
+topic_indices = lda_model.describeTopics(maxTermsPerTopic=num_words_per_topic)
+inv_voc = {value: key for (key, value) in filteredList.items()}
+
+with open("output.txt", 'w') as f:
+    # Print topics, showing the top-weighted 10 terms for each topic
+    for i in range(len(topic_indices)):
+        f.write("Topic #{0}\n".format(i + 1))
+        for j in range(len(topic_indices[i][0])):
+            f.write("{0}\t{1}\n".format(inv_voc[topic_indices[i][0][j]].encode('utf-8'), topic_indices[i][1][j]))
