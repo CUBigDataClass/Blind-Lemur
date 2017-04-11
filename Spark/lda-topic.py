@@ -9,6 +9,7 @@ from pyspark.mllib.clustering import LDA, LDAModel
 from pyspark.mllib.linalg import Vectors
 from gensim import corpora, models
 from collections import defaultdict
+from Spark import sparkDb
 
 conf = SparkConf().setMaster("local").setAppName("LDA-topic")
 sc = SparkContext(conf = conf)
@@ -39,6 +40,10 @@ tweets = sc.textFile("DB/tweetsDB.txt","DB/BarackObama_tweets.txt")
 engTweets = tweets.filter(isEnglish).map(unicode_to_str)
 # 2) remove non-utf8 from the output of the above function
 cleanTweets=engTweets.map(toprintable)
+
+#added function to retrieve rdd from cassandra
+# sparkdb = sparkDb()
+# rdd = sparkdb.readFromCassandra(sc)
 
 #3) Tokenization
 tokensRDD= cleanTweets.map(tokenize)
