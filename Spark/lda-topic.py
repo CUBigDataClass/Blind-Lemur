@@ -9,9 +9,10 @@ from pyspark.mllib.clustering import LDA, LDAModel
 from pyspark.mllib.linalg import Vectors
 from gensim import corpora, models
 from collections import defaultdict
-from Spark import sparkDb
+import sparkDb
+import config
 
-conf = SparkConf().setMaster("local").setAppName("LDA-topic")
+conf = SparkConf().setMaster("local").setAppName("LDA-topic").set("spark.cassandra.connection.host", config.cassandra_IP).set("spark.cassandra.connection.port", "9042")
 sc = SparkContext(conf = conf)
 tokenizer = RegexpTokenizer(r'\w+')
 
@@ -32,8 +33,11 @@ def tokenize(text):
     return tokenizer.tokenize(text.lower())
 def isStopWord(token):
     return token not in en_stop
-#This should be replaced by querying cassandra
-tweets = sc.textFile("DB/tweetsDB.txt","DB/BarackObama_tweets.txt")
+
+sparkdb = sparkDb.sparkDb()
+rdd = sparkdb.readFromCassandra(sc)
+tweets = rdd.map(lambda row: row[3]).map(toprintable).map(unicode_to_str)
+
 
 #cleaning dataset
 # 1) filter non-English tweets
@@ -60,15 +64,15 @@ cleanText=tweets_tokens.filter(lambda tokens: tokens)
 # Create p_stemmer of class PorterStemmer
 p_stemmer = PorterStemmer()
 # replace map by flatmap if you want to flatten the list
-stemmed_tokens = cleanText.map(lambda token: map(p_stemmer.stem,token))
+stemmed_tokens = cleanText.map(lambda tokens:map(p_stemmer.stem,tokens))
 # Remove unicode & convert each token to string
-str_tokens= stemmed_tokens.map(lambda tokens : map(str,tokens))
-flat_tokens= stemmed_tokens.flatMap(lambda tokens : map(str,tokens))
+flat_tokens= stemmed_tokens.flatMap(lambda tokens :[x for x in tokens])
+
 frq_words = flat_tokens.map(lambda word: (word,1)).reduceByKey(lambda a, b: a + b).map(lambda tuple: (tuple[1], tuple[0])).sortByKey(False)
 
 filteredList= frq_words.filter(lambda pair: pair[0]>1).map(lambda x: x[1]).zipWithIndex().collectAsMap()
 
-# Convert the given document into a vector of word counts
+# # Convert the given document into a vector of word counts
 def document_vector(document):
     id = document[1]
     counts = defaultdict(int)
@@ -80,10 +84,10 @@ def document_vector(document):
     keys = [x[0] for x in counts]
     values = [x[1] for x in counts]
     return (id, Vectors.sparse(len(filteredList), keys, values))
-# Now the dataset is clean ready to do LDA-topic modeling
+# Now the dataset is clean 
 
-corpus = str_tokens.zipWithIndex().map(document_vector).map(list)
-
+corpus = stemmed_tokens.zipWithIndex().map(document_vector).map(list).sample(False, 0.1, 81)
+# print(corpus.count())
 # Cluster the documents into three topics using LDA
 lda_model = LDA.train(corpus, k=num_topics, maxIterations=max_iterations)
 topic_indices = lda_model.describeTopics(maxTermsPerTopic=num_words_per_topic)
