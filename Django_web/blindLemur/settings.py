@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '(uaz@+oy$5j#cvu587i&)*tzy7x^q0izi1z=noe+q2a78i^jl@'
+TEMPLATE_TOPICS_PATH = os.path.join(BASE_DIR,'topics/templates/')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'blindLemur.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_TOPICS_PATH],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,19 +77,11 @@ WSGI_APPLICATION = 'blindLemur.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django_cassandra_engine',
-            'NAME': 'db',
-            'TEST_NAME': 'test_db',
-            'HOST': 'db1.example.com,db2.example.com',
-            'OPTIONS': {
-                'replication': {
-                    'strategy_class': 'SimpleStrategy',
-                    'replication_factor': 3
-                }
-            }
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
 
 
 # Password validation

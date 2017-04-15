@@ -4,7 +4,7 @@ from .CassandraManager import readTopicsFromCassandra
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Welcome to TOPIC MODELLING!")
+    return render(request,'topics/index.html',{})
 
 
 def topics(request):
