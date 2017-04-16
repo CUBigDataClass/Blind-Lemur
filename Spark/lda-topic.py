@@ -7,7 +7,6 @@ from string import digits
 from nltk.stem.porter import PorterStemmer
 from pyspark.mllib.clustering import LDA, LDAModel
 from pyspark.mllib.linalg import Vectors
-from gensim import corpora, models
 from collections import defaultdict
 import sparkDb
 import config
@@ -36,12 +35,12 @@ def isStopWord(token):
 
 sparkdb = sparkDb.sparkDb()
 rdd = sparkdb.readFromCassandra(sc)
-tweets = rdd.map(lambda row: row[3]).map(toprintable).map(unicode_to_str)
+tweets = rdd.map(lambda row: row[3]).map(toprintable).map(str)
 
 
 #cleaning dataset
 # 1) filter non-English tweets
-engTweets = tweets.filter(isEnglish).map(unicode_to_str)
+engTweets = tweets.filter(isEnglish).map(str)
 # 2) remove non-utf8 from the output of the above function
 cleanTweets=engTweets.map(toprintable)
 
