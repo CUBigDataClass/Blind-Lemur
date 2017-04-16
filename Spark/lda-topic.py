@@ -54,8 +54,8 @@ tokensRDD= cleanTweets.map(tokenize)
 stopped_tokens=tokensRDD.map(lambda TokenizedTweet:[token for token in TokenizedTweet  if token not in en_stop])
 
 #5) Remove digits & len(token)<2
-tweets_alpha=stopped_tokens.map(lambda tweet:(filter(str.isalpha,tweet)))
-tweets_tokens=tweets_alpha.map(lambda tweet:filter(lambda x: len(x) >2 , tweet))
+tweets_alpha=stopped_tokens.map(lambda TokenizedTweet:[token for token in TokenizedTweet  if token.isalpha()])
+tweets_tokens=tweets_alpha.map(lambda TokenizedTweet:[token for token in TokenizedTweet  if len(token)>2])
 # Remove empty list of tokens
 cleanText=tweets_tokens.filter(lambda tokens: tokens)
 
@@ -63,7 +63,7 @@ cleanText=tweets_tokens.filter(lambda tokens: tokens)
 # Create p_stemmer of class PorterStemmer
 p_stemmer = PorterStemmer()
 # replace map by flatmap if you want to flatten the list
-stemmed_tokens = cleanText.map(lambda tokens:map(p_stemmer.stem,tokens))
+stemmed_tokens = cleanText.map(lambda TokenizedTweet:[p_stemmer.stem(token) for token in TokenizedTweet])
 # Remove unicode & convert each token to string
 flat_tokens= stemmed_tokens.flatMap(lambda tokens :[x for x in tokens])
 
@@ -85,7 +85,7 @@ def document_vector(document):
     return (id, Vectors.sparse(len(filteredList), keys, values))
 # Now the dataset is clean
 
-corpus = stemmed_tokens.zipWithIndex().map(document_vector).map(list).sample(False, 0.1, 81)
+corpus = stemmed_tokens.zipWithIndex().map(document_vector).map(list)
 # print(corpus.count())
 # Cluster the documents into three topics using LDA
 lda_model = LDA.train(corpus, k=num_topics, maxIterations=max_iterations)
