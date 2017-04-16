@@ -51,7 +51,7 @@ cleanTweets=engTweets.map(toprintable)
 #3) Tokenization
 tokensRDD= cleanTweets.map(tokenize)
 #4) Remove stop_words
-stopped_tokens=tokensRDD.map(lambda TokenizedTweet:(filter(isStopWord,TokenizedTweet)))
+stopped_tokens=tokensRDD.map(lambda TokenizedTweet:[token for token in TokenizedTweet  if token not in en_stop])
 
 #5) Remove digits & len(token)<2
 tweets_alpha=stopped_tokens.map(lambda tweet:(filter(str.isalpha,tweet)))
@@ -83,7 +83,7 @@ def document_vector(document):
     keys = [x[0] for x in counts]
     values = [x[1] for x in counts]
     return (id, Vectors.sparse(len(filteredList), keys, values))
-# Now the dataset is clean 
+# Now the dataset is clean
 
 corpus = stemmed_tokens.zipWithIndex().map(document_vector).map(list).sample(False, 0.1, 81)
 # print(corpus.count())
