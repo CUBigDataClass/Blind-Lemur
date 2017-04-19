@@ -23,6 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(uaz@+oy$5j#cvu587i&)*tzy7x^q0izi1z=noe+q2a78i^jl@'
 TEMPLATE_TOPICS_PATH = os.path.join(BASE_DIR,'topics/templates/')
 
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'topics'
 ]
 
 INSTALLED_APPS = ['django_cassandra_engine'] + INSTALLED_APPS

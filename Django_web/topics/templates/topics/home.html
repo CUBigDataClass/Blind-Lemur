@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <style>
@@ -24,17 +25,21 @@ position:relative;
 }
 
 </style>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="{% static 'topics/jquery-3.2.1.js' %}" ></script>
+<script src="{% static 'topics/custom.js' %}" ></script>
+    <script src="{% static 'topics/jquery.cookie.js' %}"></script>
+    <script src="{% static 'topics/cloud.js' %}"></script>
     <meta charset="UTF-8">
     <title>Welcome to Blind Lemur</title>
 </head>
 <body>
-    <form action="get">
+
 
         <h1 style="color: green"  align="middle"> Welcome to LDA based topic Analysis on Twitter Data</h1>
         <div class ="centerPosition">
-            <button formaction="/topics/" class="button">  December </button><br>
+            <button class="button" value="Dec" id="month"  onmouseover="request_access(this)">  December </button><br>
         </div>
-    </form>
-
+<div id="chart"></div>
 </body>
 </html>
