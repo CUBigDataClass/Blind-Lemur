@@ -86,15 +86,16 @@ def document_vector(document):
 # Now the dataset is clean
 
 corpus = stemmed_tokens.zipWithIndex().map(document_vector).map(list)
-# print(corpus.count())
+print(corpus.count())
 # Cluster the documents into three topics using LDA
 lda_model = LDA.train(corpus, k=num_topics, maxIterations=max_iterations)
 topic_indices = lda_model.describeTopics(maxTermsPerTopic=num_words_per_topic)
 inv_voc = {value: key for (key, value) in filteredList.items()}
+results=[]
 
-with open("output.txt", 'w') as f:
     # Print topics, showing the top-weighted 10 terms for each topic
-    for i in range(len(topic_indices)):
-        f.write("Topic #{0}\n".format(i + 1))
-        for j in range(len(topic_indices[i][0])):
-            f.write("{0}\t{1}\n".format(inv_voc[topic_indices[i][0][j]].encode('utf-8'), topic_indices[i][1][j]))
+for i in range(len(topic_indices)):
+    for j in range(len(topic_indices[i][0])):
+        results.append((str(inv_voc[topic_indices[i][0][j]]), topic_indices[i][1][j]))
+
+sc.parallelize(results).saveAsTextFile("output")
