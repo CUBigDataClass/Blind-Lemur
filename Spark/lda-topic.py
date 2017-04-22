@@ -11,7 +11,7 @@ from collections import defaultdict
 import sparkDb
 import config
 
-conf = SparkConf().setMaster("local").setAppName("LDA-topic").set("spark.cassandra.connection.host", config.cassandra_IP).set("spark.cassandra.connection.port", "9042")
+conf = SparkConf().setAppName("LDA-topic").set("spark.cassandra.connection.host", config.cassandra_IP).set("spark.cassandra.connection.port", "9042")
 sc = SparkContext(conf = conf)
 tokenizer = RegexpTokenizer(r'\w+')
 path = '/root/'
