@@ -14,7 +14,7 @@ import config
 conf = SparkConf().setAppName("LDA-topic").set("spark.cassandra.connection.host", config.cassandra_IP).set("spark.cassandra.connection.port", "9042")
 sc = SparkContext(conf = conf)
 tokenizer = RegexpTokenizer(r'\w+')
-path = '/root/'
+path = 'file:///root/'
 en_stop = set(get_stop_words('en')) # create English stop words set
 num_topics = 100            # Number of topics we are looking for
 num_words_per_topic = 10    # Number of words to display for each topic
