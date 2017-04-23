@@ -14,7 +14,7 @@ import config
 conf = SparkConf().setAppName("LDA-topic").set("spark.cassandra.connection.host", config.cassandra_IP).set("spark.cassandra.connection.port", "9042")
 sc = SparkContext(conf = conf)
 tokenizer = RegexpTokenizer(r'\w+')
-path = 'file:///root/'
+path = '/root/output'
 en_stop = set(get_stop_words('en')) # create English stop words set
 num_topics = 100            # Number of topics we are looking for
 num_words_per_topic = 10    # Number of words to display for each topic
@@ -40,9 +40,9 @@ tweets = rdd.map(lambda row: row[3]).map(toprintable).map(str)
 
 #cleaning dataset
 # 1) filter non-English tweets
-engTweets = tweets.sample(False,0.2).take(1000).filter(isEnglish).map(str)
+engTweets = tweets.filter(isEnglish).map(str).sample(False,0.2).take(1000)
 # 2) remove non-utf8 from the output of the above function
-cleanTweets=engTweets.map(toprintable)
+cleanTweets=sc.parallelize(engTweets).map(toprintable)
 
 #added function to retrieve rdd from cassandra
 # sparkdb = sparkDb()
@@ -98,4 +98,6 @@ for i in range(len(topic_indices)):
     for j in range(len(topic_indices[i][0])):
         results.append((str(inv_voc[topic_indices[i][0][j]]), topic_indices[i][1][j]))
 
-sc.parallelize(results).saveAsTextFile(path+'output')
+result = sc.parallelize(results).collect()
+
+print(result)
