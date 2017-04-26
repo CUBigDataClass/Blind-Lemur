@@ -88,7 +88,7 @@ def document_vector(document):
 corpus = stemmed_tokens.zipWithIndex().map(document_vector).map(list)
 print(corpus.count())
 # Cluster the documents into three topics using LDA
-lda_model = LDA.train(corpus, k=num_topics, maxIterations=max_iterations)
+lda_model = LDA.train(corpus, k=num_topics, maxIterations=max_iterations,optimizer="online")
 topic_indices = lda_model.describeTopics(maxTermsPerTopic=num_words_per_topic)
 inv_voc = {value: key for (key, value) in filteredList.items()}
 results=[]
