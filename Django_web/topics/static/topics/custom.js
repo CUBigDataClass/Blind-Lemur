@@ -26,6 +26,7 @@ function drawWordCloud(data){
           .font("Impact")
           .on("end", draw)
           .start();
+
         function draw(words) {
 
          var tooltip = d3.select("body")
@@ -36,12 +37,14 @@ function drawWordCloud(data){
             .style("background", "Green")
             .text("a simple tooltip");
 
-         d3.select(svg_location).append("svg")
+      var svg =  d3.select(svg_location).append("svg")
               .attr("width", width)
               .attr("height", height)
               .attr("style", "outline:  dotted red;" , "fill: light grey")
             .append("g")
               .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
+              /*.transition()
+              .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")*/
             .selectAll("text")
               .data(words)
             .enter().append("text")
@@ -55,8 +58,7 @@ function drawWordCloud(data){
                .text(function(d) { return d.text; })
                .on("click", function(d) {
                 alert(d.text);
-                });
-
+                })
 
         }
         d3.layout.cloud().stop();
@@ -65,10 +67,11 @@ function drawWordCloud(data){
 
 function dummyPagenation(data){
         var arrayLength = data.name.length;
-            drawWordCloud(data.name.slice(0,10));
-            drawWordCloud(data.name.slice(10,20));
-            drawWordCloud(data.name.slice(20,30));
-            drawWordCloud(data.name.slice(30,40));
+        var timeout = 1000;
+        setTimeout(function() { drawWordCloud(data.name.slice(0,10))}, timeout)
+        setTimeout(function() { drawWordCloud(data.name.slice(10,20))}, 2*timeout)
+        setTimeout(function() { drawWordCloud(data.name.slice(20,30))}, 4*timeout)
+        setTimeout(function() { drawWordCloud(data.name.slice(30,40))}, 6*timeout)
         }
 
 
