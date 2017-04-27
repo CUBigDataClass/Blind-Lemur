@@ -5,6 +5,7 @@ function drawWordCloud(data){
             word_count[data[i][0]] = data[i][1];
         }
 
+
         var svg_location = "#chart";
         var width = 400;
         var height = 600;
@@ -26,7 +27,16 @@ function drawWordCloud(data){
           .on("end", draw)
           .start();
         function draw(words) {
-          d3.select(svg_location).append("svg")
+
+         var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "relative")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("background", "Green")
+            .text("a simple tooltip");
+
+         d3.select(svg_location).append("svg")
               .attr("width", width)
               .attr("height", height)
               .attr("style", "outline:  dotted red;" , "fill: light grey")
@@ -42,7 +52,12 @@ function drawWordCloud(data){
               .attr("transform", function(d) {
                 return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
               })
-              .text(function(d) { return d.key; });
+               .text(function(d) { return d.text; })
+               .on("click", function(d) {
+                alert(d.text);
+                });
+
+
         }
         d3.layout.cloud().stop();
       }
@@ -57,9 +72,8 @@ function dummyPagenation(data){
         }
 
 
-function request_access(data){
+function request_access(monthSelected){
    // alert("hello");
-     var monthSelected = $("#month").val();
       $.ajax({
         type:"POST",
         url: "/fetchMonthTopics/",
