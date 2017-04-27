@@ -11,7 +11,7 @@ from collections import defaultdict
 import sparkDb
 import config
 
-conf = SparkConf().setAppName("LDA-topic").set("spark.cassandra.connection.host", config.cassandra_IP).set("spark.cassandra.connection.port", "9042")
+conf = SparkConf().setMaster("local[*]").setAppName("LDA-topic").set("spark.cassandra.connection.host", config.cassandra_IP).set("spark.cassandra.connection.port", "9042")
 sc = SparkContext(conf = conf)
 tokenizer = RegexpTokenizer(r'\w+')
 path = '/root/output'
@@ -88,7 +88,7 @@ def document_vector(document):
 corpus = stemmed_tokens.zipWithIndex().map(document_vector).map(list)
 print(corpus.count())
 # Cluster the documents into three topics using LDA
-lda_model = LDA.train(corpus, k=num_topics, maxIterations=max_iterations,optimizer="online")
+lda_model = LDA.train(corpus,optimizer="online")
 topic_indices = lda_model.describeTopics(maxTermsPerTopic=num_words_per_topic)
 inv_voc = {value: key for (key, value) in filteredList.items()}
 results=[]
@@ -98,6 +98,6 @@ for i in range(len(topic_indices)):
     for j in range(len(topic_indices[i][0])):
         results.append((str(inv_voc[topic_indices[i][0][j]]), topic_indices[i][1][j]))
 
-result = sc.parallelize(results).collect()
-
-print(result)
+# result = sc.parallelize(results).collect()
+sc.parallelize(results).saveAsTextFile("output")
+# print(result)
