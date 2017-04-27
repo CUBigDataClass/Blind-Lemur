@@ -1,13 +1,13 @@
 function drawWordCloud(data){
         var word_count = {};
-        var arrayLength = data.name.length;
+        var arrayLength = data.length;
         for (var i = 0; i < arrayLength; i++) {
-            word_count[data.name[i][0]] = data.name[i][1];
+            word_count[data[i][0]] = data[i][1];
         }
 
         var svg_location = "#chart";
-        var width = 500;
-        var height = 500;
+        var width = 400;
+        var height = 600;
         var fill = d3.scale.category20();
         var word_entries = d3.entries(word_count);
         var xScale = d3.scale.linear()
@@ -29,6 +29,7 @@ function drawWordCloud(data){
           d3.select(svg_location).append("svg")
               .attr("width", width)
               .attr("height", height)
+              .attr("style", "outline:  dotted red;" , "fill: light grey")
             .append("g")
               .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
             .selectAll("text")
@@ -47,6 +48,13 @@ function drawWordCloud(data){
       }
 
 
+function dummyPagenation(data){
+        var arrayLength = data.name.length;
+            drawWordCloud(data.name.slice(0,10));
+            drawWordCloud(data.name.slice(10,20));
+            drawWordCloud(data.name.slice(20,30));
+            drawWordCloud(data.name.slice(30,40));
+        }
 
 
 function request_access(data){
@@ -62,7 +70,10 @@ function request_access(data){
         },
         dataType: 'json',
         success: function (data) {
-            drawWordCloud(data);
+            d3.selectAll("svg").remove();
+
+            dummyPagenation(data);
+            //drawWordCloud(data);
            // alert(data);
         }
       });

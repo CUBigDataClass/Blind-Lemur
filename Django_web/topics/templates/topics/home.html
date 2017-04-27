@@ -25,21 +25,67 @@ position:relative;
 }
 
 </style>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+<style>
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+div.scrollmenu {
+    background-color: green;
+    overflow: auto;
+    white-space: nowrap;
+    width: 500px;
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+    background-color:  Orange;
+}
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="{% static 'topics/jquery-3.2.1.js' %}" ></script>
 <script src="{% static 'topics/custom.js' %}" ></script>
-    <script src="{% static 'topics/jquery.cookie.js' %}"></script>
-    <script src="{% static 'topics/cloud.js' %}"></script>
+<script src="{% static 'topics/jquery.cookie.js' %}"></script>
+<script src="{% static 'topics/cloud.js' %}"></script>
+
     <meta charset="UTF-8">
     <title>Welcome to Blind Lemur</title>
 </head>
 <body>
-
-
         <h1 style="color: green"  align="middle"> Welcome to LDA based topic Analysis on Twitter Data</h1>
-        <div class ="centerPosition">
-            <button class="button" value="Dec" id="month"  onmouseover="request_access(this)">  December </button><br>
+
+            <div class="scrollmenu">
+            <button  value="January" id="month"  onclick="request_access(this)">January</button>
+            <button  value="February" id="month"  onclick="request_access(this)">February</button>
+            <button  value="March" id="month"  onclick="request_access(this)">March</button>
+            <button  value="April" id="month"  onclick="request_access(this)">April</button>
+            <button  value="May" id="month"  onclick="request_access(this)">May</button>
+            <button  value="June" id="month"  onclick="request_access(this)">June</button>
+            <button  value="July" id="month"  onclick="request_access(this)">July</button>
+            <button  value="August" id="month"  onclick="request_access(this)">August</button>
+            <button  value="September" id="month"  onclick="request_access(this)">September</button>
+            <button  value="October" id="month"  onclick="request_access(this)">October</button>
+            <button  value="November" id="month"  onclick="request_access(this)">November</button>
+            <button  value="December" id="month"  onclick="request_access(this)">December</button>
         </div>
-<div id="chart"></div>
+                </div>
+        <br>
+        <div id="chart"></div>
 </body>
 </html>
