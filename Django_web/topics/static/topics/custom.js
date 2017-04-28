@@ -31,10 +31,13 @@ function drawWordCloud(data){
 
          var tooltip = d3.select("body")
             .append("div")
-            .style("position", "relative")
+            .style("position", "absolute")
+            .style("font-size","30px")
             .style("z-index", "10")
             .style("visibility", "hidden")
-            .style("background", "Green")
+            .style("background", "#C2DFFF")
+            .style('fill','red')
+            /*.style("font-weight","bold")*/
             .text("a simple tooltip");
 
       var svg =  d3.select(svg_location).append("svg")
@@ -56,10 +59,9 @@ function drawWordCloud(data){
                 return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
               })
                .text(function(d) { return d.text; })
-               .on("click", function(d) {
-                alert(d.text);
-                })
-
+               .on("mouseover", function(d){tooltip.text("Topic Weight = " +d.value.toFixed(3)); return tooltip.style("visibility", "visible");})
+               .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+               .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
         }
         d3.layout.cloud().stop();
       }
@@ -75,6 +77,10 @@ function dummyPagenation(data){
         }
 
 
+function changeColor(data){
+     $(this).css('background-image', '#E66C2C');
+}
+
 function request_access(monthSelected){
    // alert("hello");
       $.ajax({
@@ -88,7 +94,6 @@ function request_access(monthSelected){
         dataType: 'json',
         success: function (data) {
             d3.selectAll("svg").remove();
-
             dummyPagenation(data);
             //drawWordCloud(data);
            // alert(data);
