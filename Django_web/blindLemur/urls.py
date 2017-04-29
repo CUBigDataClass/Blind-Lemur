@@ -21,5 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
     url(r'^homeTopics/',views.homeTopics, name='homeTopics'),
-    url(r'^fetchMonthTopics/$',views.fetchMonthTopics, name='fetchMonthTopics')
+    url(r'^fetchMonthTopics/$',views.fetchMonthTopics, name='fetchMonthTopics'),
+    url(r'^fetchTopicCounts/$',views.fetchTopicCounts, name='fetchTopicCounts')
+
 ]

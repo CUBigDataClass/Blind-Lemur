@@ -1,4 +1,24 @@
-function drawWordCloud(data){
+function  fetchBarGraphcounts(monthSelected){
+    $.ajax({
+        type:"POST",
+        url: "/fetchTopicCounts/",
+        dataType: 'json',
+        contentType: 'json',
+        data: {
+         'monthSelected': monthSelected
+        },
+        dataType: 'json',
+        success: function (data) {
+            alert("Sucess");
+
+        }
+      });
+
+}
+
+
+
+function drawWordCloud(data, monthSelected){
         var word_count = {};
         var arrayLength = data.length;
         for (var i = 0; i < arrayLength; i++) {
@@ -8,7 +28,7 @@ function drawWordCloud(data){
 
         var svg_location = "#chart";
         var width = 400;
-        var height = 600;
+        var height = 500;
         var fill = d3.scale.category20();
         var word_entries = d3.entries(word_count);
         var xScale = d3.scale.linear()
@@ -16,7 +36,8 @@ function drawWordCloud(data){
               return d.value;
             })
            ])
-           .range([10,100]);
+
+           .range([10,75]);
         d3.layout.cloud().size([width, height])
           .timeInterval(20)
           .words(word_entries)
@@ -59,6 +80,9 @@ function drawWordCloud(data){
                 return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
               })
                .text(function(d) { return d.text; })
+               .on("click", function(d){
+                    fetchBarGraphcounts(monthSelected);
+               })
                .on("mouseover", function(d){tooltip.text("Topic Weight = " +d.value.toFixed(3)); return tooltip.style("visibility", "visible");})
                .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
                .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
@@ -67,13 +91,13 @@ function drawWordCloud(data){
       }
 
 
-function dummyPagenation(data){
+function dummyPagenation(data, monthSelected){
         var arrayLength = data.name.length;
         var timeout = 1000;
-        setTimeout(function() { drawWordCloud(data.name.slice(0,10))}, timeout)
-        setTimeout(function() { drawWordCloud(data.name.slice(10,20))}, 2*timeout)
-        setTimeout(function() { drawWordCloud(data.name.slice(20,30))}, 4*timeout)
-        setTimeout(function() { drawWordCloud(data.name.slice(30,40))}, 6*timeout)
+        setTimeout(function() { drawWordCloud(data.name.slice(0,10), monthSelected)}, timeout)
+        setTimeout(function() { drawWordCloud(data.name.slice(10,20), monthSelected)}, 2*timeout)
+        setTimeout(function() { drawWordCloud(data.name.slice(20,30), monthSelected)}, 4*timeout)
+        setTimeout(function() { drawWordCloud(data.name.slice(30,40)), monthSelected}, 6*timeout)
         }
 
 
@@ -94,12 +118,15 @@ function request_access(monthSelected){
         dataType: 'json',
         success: function (data) {
             d3.selectAll("svg").remove();
-            dummyPagenation(data);
+            dummyPagenation(data, monthSelected);
             //drawWordCloud(data);
            // alert(data);
         }
       });
     }
+
+
+
 
 
 
