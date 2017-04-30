@@ -25,6 +25,8 @@ TEMPLATE_TOPICS_PATH = os.path.join(BASE_DIR,'topics/templates/')
 
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

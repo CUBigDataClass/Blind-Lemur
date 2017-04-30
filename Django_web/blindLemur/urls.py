@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from topics import views
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,3 +29,8 @@ urlpatterns = [
     url(r'^fetchTopicCounts/$',views.fetchTopicCounts, name='fetchTopicCounts')
 
 ]
+
+url = static('topics/img/1.jpg')
+url = static('topics/img/2.jpg')
+url = static('topics/img/3.jpg')
+url = static('topics/img/4.jpg')
