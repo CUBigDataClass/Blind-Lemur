@@ -110,8 +110,8 @@ function request_access(monthSelected){
       $.ajax({
         type:"POST",
         url: "/fetchMonthTopics/",
-        dataType: 'json',
-        contentType: 'json',
+        dataType: 'application/json',
+        contentType: 'application/json; charset=utf-8',
         data: {
          'monthSelected': monthSelected
         },

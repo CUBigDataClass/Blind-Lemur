@@ -50,7 +50,12 @@ def homeTopics(request):
 
 @csrf_exempt
 def fetchMonthTopics(request):
-    rows = readTopicsFromCassandra('Dec')
+
+    if request.method == 'POST':
+
+        k = request.body.decode('utf-8')
+        monthSelected = k.split('=')[1]
+    rows = readTopicsFromCassandra(str(monthSelected))
     mainObj =[]
     for row in rows:
         for i in row.topics:
