@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+<style>
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+div.scrollmenu {
+    background-color: green;
+    overflow: auto;
+    white-space: nowrap;
+    width: 500px;
+
+}
+div.scrollmenu1 {
+    background-color: green;
+    overflow: auto;
+    white-space: nowrap;
+    width: 500px;
+
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scrollmenu1 a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scrollmenu button:hover {
+    background-color:  #E66C2C;
+}
+div.scrollmenu1 button:hover , button:focus {
+    background-color:  #E66C2C;
+
+}
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.centerPosition{
+  position: relative;
+    left: 35%;
+    top: 64px;
+    right: 30%;
+     margin-left:auto;
+    margin-right:auto;
+}
+
+.centerPosition1{
+  position: relative;
+  margin-left:auto;
+  margin-right:auto;
+  left: 5%;
+  top: 70px;
+
+}
+
+.centerPosition2{
+  display: inline-block
+  position: relative;
+  margin-left:auto;
+  margin-right:auto;
+  left: 5%;
+  top: 75px;
+
+}
+
+.mainCenter{
+left: 17%;
+position: relative;
+}
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="{% static 'topics/jquery-3.2.1.js' %}" ></script>
+<script src="{% static 'topics/custom.js' %}" ></script>
+<script src="{% static 'topics/jquery.cookie.js' %}"></script>
+<!--<script src="{% static 'topics/cloud.js' %}"></script>-->
+<script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
+<script src="{% static 'topics/gdbBarGraph.js' %}"></script>
+
+
+
+    <meta charset="UTF-8">
+    <title>Welcome to Blind Lemur</title>
+</head>
+<body>
+        <h1 style="color: green"  align="middle"> Welcome to LDA based topic Analysis on Twitter Data</h1>
+            <div class = "mainCenter">
+          <div class="centerPosition" >
+            <div class="scrollmenu">
+
+            <button  class="button" value="January"   onclick="request_access($(this).val())">January</button>
+            <button  class="button" value="February"   onclick="request_access($(this).val())">February</button>
+            <button  class="button" value="March"   onclick="request_access($(this).val())">March</button>
+            <button  class="button" value="April"   onclick="request_access($(this).val())">April</button>
+            <button  class="button" value="May"   onclick="request_access($(this).val())">May</button>
+            <button  class="button" value="June"   onclick="request_access($(this).val())">June</button>
+            <button  class="button" value="July"   onclick="request_access($(this).val())">July</button>
+            <button  class="button" value="August"   onclick="request_access($(this).val())">August</button>
+            <button  class="button" value="September"   onclick="request_access($(this).val())">September</button>
+            <button  class="button" value="October"   onclick="request_access($(this).val())">October</button>
+            <button  class="button" value="November"   onclick="request_access($(this).val())">November</button>
+            <button  class="button" value="December"   onclick="request_access($(this).val())">December</button>
+        </div>
+                </div>
+
+
+         <div class="centerPosition2">
+            <div class="scrollmenu1">
+            <button  class="button" value="January" onclick="changeColor($(this))">2006</button>
+            <button  class="button" value="February" >2007</button>
+            <button  class="button" value="March" >2008</button>
+            <button  class="button" value="April">2009</button>
+            <button  class="button" value="May"  >2010</button>
+            <button  class="button" value="June" >2011</button>
+            <button  class="button" value="July"  >2012</button>
+            <button  class="button" value="August" >2013</button>
+            <button  class="button" value="September">2014</button>
+            <button  class="button" value="October"  >2016</button>
+            <button  class="button" value="November">2017</button>
+        </div>
+                </div>
+</div>
+        <div id="chart" class="centerPosition1"></div>
+</body>
+</html>

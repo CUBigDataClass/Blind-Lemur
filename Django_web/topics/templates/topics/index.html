@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Big Data - Blind Lemur</title>
+
+    <!-- css -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="{% static 'topics/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'topics/css/nivo-lightbox.css' %}" rel="stylesheet" />
+	<link href="{% static 'topics/css/nivo-lightbox-theme/default/default.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'topics/css/animations.css' %}" rel="stylesheet" />
+    <link href="{% static 'topics/css/style.css' %}" rel="stylesheet" />
+	<link href="{% static 'topics/color/default.css' %}" rel="stylesheet" />
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="{% static 'topics/jquery-3.2.1.js' %}" ></script>
+<script src="{% static 'topics/custom.js' %}" ></script>
+<script src="{% static 'topics/jquery.cookie.js' %}"></script>
+<!--<script src="{% static 'topics/cloud.js' %}"></script>-->
+<script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
+<script src="{% static 'topics/gdbBarGraph.js' %}"></script>
+
+
+
+	<style>
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+div.scrollmenu {
+    background-color: 00cc99;
+    overflow: auto;
+    white-space: nowrap;
+    width: 500px;
+
+}
+div.scrollmenu1 {
+    background-color: 00cc99;
+    overflow: auto;
+    white-space: nowrap;
+    width: 500px;
+
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scrollmenu1 a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scrollmenu button:hover {
+    background-color:  #E66C2C;
+}
+div.scrollmenu1 button:hover , button:focus {
+    background-color:  #E66C2C;
+
+}
+.button {
+    background-color: #00cc99;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.centerPosition{
+  position: relative;
+    left: 35%;
+    right: 30%;
+     margin-left:auto;
+    margin-right:auto;
+}
+
+.centerPosition1{
+  position: relative;
+  margin-left:auto;
+  margin-right:auto;
+  left: 5%;
+  top: 5px;
+
+}
+
+.centerPosition2{
+  margin-left:auto;
+  margin-right:auto;
+  left: 5%;
+  top: 2px;
+  position: absolute;
+
+}
+
+.mainCenter{
+left: 17%;
+position: relative;
+}
+
+div.mybackground {
+    position: absolute;
+    height: 150%;
+    width:  10px
+
+}
+div.mybackground1 {
+    position: absolute;
+    height: 550%;
+    width:  10px
+
+}
+</style>
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+
+	<section class="hero" id="intro">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-right navicon">
+                  <a id="nav-toggle" class="nav_slide_button" href="#"><span></span></a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center inner">
+					<div class="animatedParent">
+						<h1 class="animated fadeInDown">Blind Lemur</h1>
+						<p class="animated fadeInUp">LDA Based Topic Analysis on Twitter Data</p>
+					</div>
+			   </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-md-offset-3 text-center">
+                  <a href="#demo" class="learn-more-btn btn-scroll">Analysis</a>
+                </div>
+              </div>
+            </div>
+    </section>
+
+
+    <!-- Navigation -->
+    <div id="navigation">
+        <nav class="navbar navbar-custom" role="navigation">
+                              <div class="container">
+                                    <div class="row">
+                                          <div class="col-md-2">
+                                          </div>
+
+
+                                          <div class="col-md-10">
+
+                                                      <!-- Brand and toggle get grouped for better mobile display -->
+                                          <div class="navbar-header">
+                                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+                                                <i class="fa fa-bars"></i>
+                                                </button>
+                                          </div>
+                                                      <!-- Collect the nav links, forms, and other content for toggling -->
+                                                      <div class="collapse navbar-collapse" id="menu" align="middle">
+                                                            <ul class="nav navbar-nav navbar-right">
+                                                                  <li class="active"><a href="#intro">Home</a></li>
+                                                                  <li><a href="#about">About Project</a></li>
+																   <li><a href="#timeline">Timeline</a></li>
+                                                                  <li><a href="#demo">Demo</a></li>
+                                                            </ul>
+                                                      </div>
+                                                      <!-- /.Navbar-collapse -->
+
+                                          </div>
+                                    </div>
+                              </div>
+                              <!-- /.container -->
+                        </nav>
+    </div>
+    <!-- /Navigation -->
+
+	<!-- Section: about -->
+    <section id="about" class="home-section color-dark bg-white">
+		<div class="container marginbot-50">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<div class="animatedParent">
+					<div class="section-heading text-center animated bounceInDown">
+					<h2 class="h-bold">About the Project</h2>
+					<div class="divider-header"></div>
+					</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="container">
+
+
+        <div class="row">
+
+
+            <div class="col-lg-8 col-lg-offset-2 animatedParent">
+				<div class="text-center">
+					<p>
+					The aim of the Project is to visualize Topic Modelling on Twitter Data using LDA Algorithm . Here, GNIP API will be used to obtain a huge data-set of tweets from Twitter and stored in Datastax Cassandra. The tweets will further be processed in Apache Spark with three nodes where they are tokenized. Tokens shall be processed using LDA algorithm on Apache Spark. The results will be stored back in Cassandra.</p>
+					<p>
+					To visualize the obtained results, a User Interface is developed using HTML, CSS, JQuery and D3. The User Interface shall retrieve data from Cassandra through Django Framework. 					</p>
+				</div>
+            </div>
+
+
+        </div>
+		</div>
+  <div class="container">
+        <div class="mybackground1">
+
+		</div>
+       </div>
+	</section>
+	<!-- /Section: about -->
+
+
+	<!-- Section: works -->
+    <section id="timeline" class="home-section color-dark text-center bg-white">
+		<div class="container marginbot-50">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<div>
+					<div class="animatedParent">
+					<div class="section-heading text-center">
+					<h2 class="h-bold animated bounceInDown">Time Line</h2>
+					<div class="divider-header"></div>
+					</div>
+					</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="container">
+
+            <div class="row animatedParent">
+                <div class="col-sm-12 col-md-12 col-lg-12" >
+
+                    <div class="row gallery-item">
+						 <div class="col-md-3 animated fadeInUp">
+							<a href="static/topics/img/4.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="{% static 'topics/img/1@2px.jpg' %}">
+								<img src="{% static 'topics/img/4.jpg' %}" class="img-responsive" alt="img">
+							</a>
+						</div>
+                        <div class="col-md-3 animated fadeInUp">
+							<a href="static/topics/img/1.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="{% static 'topics/img/1@2x.jpg' %}">
+								<img src="{% static 'topics/img/1.jpg' %}" class="img-responsive" alt="img">
+							</a>
+						</div>
+						<div class="col-md-3 animated fadeInUp slow">
+							<a href="static/topics/img/2.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="{% static 'topics/img/1@2x.jpg' %}">
+								<img src="{% static 'topics/img/2.jpg' %}" class="img-responsive" alt="img">
+							</a>
+						</div>
+						 <div class="col-md-3 animated fadeInUp">
+							<a href="static/topics/img/3.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="{% static 'topics/img/1.jpg' %}">
+								<img src="{% static 'topics/img/3.jpg' %}" class="img-responsive" alt="img">
+							</a>
+						</div>
+					</div>
+
+                </div>
+            </div>
+		</div>
+  <div class="container">
+
+        <div class="mybackground1">
+
+		</div>
+       </div>
+	</section>
+
+	<!-- Section: contact -->
+    <section id="demo" class="home-section color-dark bg-white">
+    				<div class="container marginbot-50">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<div class="animatedParent">
+					<div class="section-heading text-center animated bounceInDown">
+					<h2 class="h-bold">Demo</h2>
+					<div class="divider-header"></div>
+					</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		   <div class = "mainCenter">
+         		 <div class="centerPosition" >
+            		<div class="scrollmenu">
+
+			            <button  class="button" value="January"   onclick="request_access($(this).val())">January</button>
+			            <button  class="button" value="February"   onclick="request_access($(this).val())">February</button>
+			            <button  class="button" value="March"   onclick="request_access($(this).val())">March</button>
+			            <button  class="button" value="April"   onclick="request_access($(this).val())">April</button>
+			            <button  class="button" value="May"   onclick="request_access($(this).val())">May</button>
+			            <button  class="button" value="June"   onclick="request_access($(this).val())">June</button>
+			            <button  class="button" value="July"   onclick="request_access($(this).val())">July</button>
+			            <button  class="button" value="August"   onclick="request_access($(this).val())">August</button>
+			            <button  class="button" value="September"   onclick="request_access($(this).val())">September</button>
+			            <button  class="button" value="October"   onclick="request_access($(this).val())">October</button>
+			            <button  class="button" value="November"   onclick="request_access($(this).val())">November</button>
+			            <button  class="button" value="December"   onclick="request_access($(this).val())">December</button>
+			        </div>
+            </div>
+
+
+			         <div class="centerPosition2">
+			            <div class="scrollmenu1">
+			            <button  class="button" value="January" onclick="changeColor($(this))">2006</button>
+			            <button  class="button" value="February" >2007</button>
+			            <button  class="button" value="March" >2008</button>
+			            <button  class="button" value="April">2009</button>
+			            <button  class="button" value="May"  >2010</button>
+			            <button  class="button" value="June" >2011</button>
+			            <button  class="button" value="July"  >2012</button>
+			            <button  class="button" value="August" >2013</button>
+			            <button  class="button" value="September">2014</button>
+			            <button  class="button" value="October"  >2016</button>
+			            <button  class="button" value="November">2017</button>
+			        </div>
+       </div>
+       </div>
+
+       <div class="container">
+
+        <div class="mybackground">
+
+		</div>
+       </div>
+
+</section>
+<div id="chart" class="centerPosition1"></div>
+    <!-- Core JavaScript Files -->
+<script src="{% static 'topics/js/jquery.min.js' %} "></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="{% static 'topics/js/jquery.sticky.js' %}"></script>
+    <script src="{% static 'topics/js/jquery.easing.min.js' %}"></script>
+	<script src="{% static 'topics/js/jquery.scrollTo.js' %}"></script>
+	<script src="{% static 'topics/js/jquery.appear.js' %}"></script>
+	<script src="{% static 'topics/js/stellar.js' %}"></script>
+	<script src="{% static 'topics/js/nivo-lightbox.min.js' %}"></script>
+
+    <script src="{% static 'topics/js/custom.js' %}"></script>
+	<script src="{% static 'topics/js/css3-animate-it.js' %}"></script>
+
+</body>
+
+</html>

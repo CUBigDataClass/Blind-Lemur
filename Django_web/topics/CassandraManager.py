@@ -3,20 +3,11 @@ from datetime import datetime, timedelta
 from email.utils import parsedate_tz
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement, SimpleStatement
-
-
 from cassandra.query import named_tuple_factory, ValueSequence
-
-import config
+from . import config
 import re
 
 def createCassandraConnection():
-   # cluster = Cluster()
-    #session = cluster.connect()
-    #session.execute('USE '+config.cassandra_keyspace+';')
-    #session.execute('DROP TABLE IF EXISTS '+config.cassandra_table+'')
-    #session.execute(config.cassandra_createTableQuery)
-
     cluster = Cluster(['34.208.209.148'])
     session = cluster.connect()
     session.execute('USE '+config.cassandra_keyspace+';')
@@ -31,9 +22,7 @@ def to_datetime(datestring):
     return dt - timedelta(seconds=time_tuple[-1])
 
 def insertIntoCassandra(data, session):
-    num_tweets = 0
     for tweet in data["results"]:
-        num_tweets += 1
         hashtagList=[]
         tweet_date= to_datetime(tweet["created_at"])
         tweet_id= tweet["id"]
@@ -52,7 +41,6 @@ def insertIntoCassandra(data, session):
 
 
 
-
 def readTopicsFromCassandra(month):
     year = '2016'
     session = createCassandraConnection()
@@ -60,4 +48,3 @@ def readTopicsFromCassandra(month):
     query =  session.prepare('SELECT topic,topics FROM '+ config.cassandra_topic_table +  ' WHERE month = ? and year = ? ALLOW FILTERING')
     rows = session.execute(query, [month, year])
     return rows
-

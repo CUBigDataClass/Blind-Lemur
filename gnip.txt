@@ -1,0 +1,1 @@
+curl --compressed -v -uabu.sayed@colorado.edu   "https://gnip-api.twitter.com/search/fullarchive/accounts/greg-students/prod.json?query=donald&maxResults=20" > test_gnip_api.json
