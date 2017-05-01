@@ -27,8 +27,8 @@ function drawWordCloud(data, monthSelected){
 
 
         var svg_location = "#chart";
-        var width = 400;
-        var height = 500;
+        var width = 420;
+        var height = 520;
         var fill = d3.scale.category20();
         var word_entries = d3.entries(word_count);
         var xScale = d3.scale.linear()
