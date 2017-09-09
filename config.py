@@ -1,5 +1,5 @@
-url= 'https://gnip-api.twitter.com/search/fullarchive/accounts/greg-students/prod.json'
-username = 'abu.sayed@colorado.edu'
+url= 'https://gnip-api.twitter.com/search/fullarchive/accounts/.../prod.json'
+username = ''
 password = ''
 
 cassandra_keyspace = 'twitterstorage'
